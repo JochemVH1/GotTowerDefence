@@ -14,6 +14,10 @@ cc.Class({
 			default:null,
 			type: cc.Label
 		},
+		backgroundMusic: {
+			default: null,
+			url: cc.AudioClip
+		},
         // defaults, set visually when attaching this script to the Canvas
         title: 'GoT Tower Defence',
 		btnStartLabelText: 'Start'
@@ -23,6 +27,7 @@ cc.Class({
     onLoad: function () {
         this.label.string = this.title;
 		this.btnStartLabel.string = this.btnStartLabelText;
+		this.music = cc.audioEngine.play(this.backgroundMusic, true, 0.5);
 		log(this.node);
     },
 
@@ -31,8 +36,11 @@ cc.Class({
 
     },
 	
+	onDestroy: function () {
+		cc.audioEngine.stop(this.music);
+	},
+	
 	startGame: function (){
-		alert('start game clicked');
 		var director = cc.director;
 		director.loadScene('Level1');
 	},
