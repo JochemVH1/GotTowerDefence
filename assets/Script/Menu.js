@@ -33,6 +33,8 @@ cc.Class({
 	
 	startGame: function (){
 		alert('start game clicked');
+		var director = cc.director;
+		director.loadScene('Level1');
 	},
 	
 	
