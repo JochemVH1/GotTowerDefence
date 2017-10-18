@@ -229,7 +229,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 144.7,
+      "width": 505.72,
       "height": 60
     },
     "_rotationX": 0,
@@ -266,7 +266,7 @@
     },
     "_isSystemFontUsed": false,
     "_spacingX": 0,
-    "_N$string": "Label",
+    "_N$string": "GoT Tower Defence",
     "_N$horizontalAlign": 1,
     "_N$verticalAlign": 1,
     "_N$fontFamily": "Arial",
