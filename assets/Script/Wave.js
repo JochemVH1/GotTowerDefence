@@ -5,11 +5,15 @@ cc.Class({
 	onLoad: function () {},
 	
 	// use this for initialization
-	init: function (waveSize, prefabEnemy,startingPosition,path,startingTimeInSeconds) {
+	init: function (waveSize, prefabEnemy, speedOfWave, waveType, startingPosition, path, startingTimeInSeconds) {
 		// size of the wave
 		this.waveSize = waveSize;
+		// speed of the wave
+		this.speedOfWave = speedOfWave;
 		// path of the wave
 		this.path = path;
+		// type of monster in the wave
+		this.waveType = waveType
 		// starting position of the wave
 		this.startingPosition = startingPosition;
 		// starting time of the wave
@@ -24,7 +28,7 @@ cc.Class({
 	//gets an enemy out of the wavePoll and runs its path
 	createWave: function (parentNode) {
 		let enemy = null;
-		// check of the enemyPool is instantiated
+		// check if the enemyPool is instantiated
 		if (this.enemyPool.size() > 0) 
 		{ 		
 			for (let i = 0; i < this.waveSize; ++i) {
@@ -34,12 +38,30 @@ cc.Class({
 			enemy.parent = parentNode;
 			// initializes the enemy
 			// parameters are hitpoints, number in the wave and path of the wave
-			enemy.getComponent('Enemy').init(100,i+1,this.path);
+			enemy.getComponent('Enemy').init(100,this.speedOfWave,i+1,this.path);
 			// sets the starting point of the enemy
 			enemy.setPosition(cc.p(this.startingPosition[0],this.startingPosition[1]));
+			// changes texture of monster according to wavetype
+			// TODO: waveType might be better as a STRING
+			switch(this.waveType){
+				case 0: 
+					// for cc.loader.loadRes to work images must be placed in a folder called resources
+					// images also mustn't provide and suffix like .png, .jpg, ...
+					var sprite  = enemy.getComponent(cc.Sprite);//.spriteFrame = new cc.SpriteFrame(texture); 
+					cc.loader.loadRes("circle", function(err, data) {
+						this.spriteFrame = new cc.SpriteFrame(data);
+					}.bind(sprite));
+					break;
+				case 1: 
+					var sprite = enemy.getComponent(cc.Sprite);
+					cc.loader.loadRes("triangle", function(err, data) {
+						this.spriteFrame = new cc.SpriteFrame(data);
+					}.bind(sprite));
+					break;
+			}
 			// starts the movement of the of the enemy
 			// first it delays the action with the starting time of the wave
-			// then it runs the movement of the enemy
+			// then it runs the movement of the enemy			
 			enemy.runAction(cc.sequence(new cc.DelayTime(this.startingTimeInSeconds),enemy.getComponent('Enemy').move()));
 			}
 		}	
