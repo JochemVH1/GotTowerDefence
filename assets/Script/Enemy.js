@@ -42,4 +42,17 @@ cc.Class({
 		}
 		return cc.sequence(temp);
 	},
+	animate: function(animation,namePlist,speed){
+		cc.loader.loadRes(namePlist, cc.SpriteAtlas, function(err, atlas){
+			var aniframes = atlas.getSpriteFrames();
+			console.log(aniframes);
+			var clip =  cc.AnimationClip.createWithSpriteFrames(aniframes,3)
+			clip.name = "circle_anim";
+			clip.speed = speed;
+			clip.wrapMode = cc.WrapMode.Loop;
+			animation.addClip(clip);
+			var animstate = animation.play("circle_anim",2);
+			animation.setCurrentTime(10, "circle_anim")				
+		});
+	}
 });

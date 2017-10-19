@@ -5,7 +5,7 @@ cc.Class({
 	onLoad: function () {},
 	
 	// use this for initialization
-	init: function (waveSize, prefabEnemy, speedOfWave, waveType, startingPosition, path, startingTimeInSeconds) {
+	init: function (waveSize, prefabEnemy, speedOfWave, waveType, mixedType, startingPosition, path, startingTimeInSeconds) {
 		// size of the wave
 		this.waveSize = waveSize;
 		// speed of the wave
@@ -13,11 +13,13 @@ cc.Class({
 		// path of the wave
 		this.path = path;
 		// type of monster in the wave
-		this.waveType = waveType
+		this.waveType = waveType;
+		// boolean for mixing waves
+		this.mixedType = mixedType;
 		// starting position of the wave
 		this.startingPosition = startingPosition;
 		// starting time of the wave
-		this.startingTimeInSeconds = startingTimeInSeconds
+		this.startingTimeInSeconds = startingTimeInSeconds;
 		// enemyPool of the wave
 		this.enemyPool = new cc.NodePool();
 		for (let i = 0; i < waveSize; ++i) {
@@ -43,18 +45,33 @@ cc.Class({
 			enemy.setPosition(cc.p(this.startingPosition[0],this.startingPosition[1]));
 			// changes texture of monster according to wavetype
 			// TODO: waveType might be better as a STRING
-			switch(this.waveType){
+			var type = 0;
+			if(this.mixedType){
+				type = this.waveType[Math.floor(Math.random()*this.waveType.length)];
+			}else
+			{
+				type = this.waveType[0];
+			}
+			switch(type){
 				case 0: 
 					// for cc.loader.loadRes to work images must be placed in a folder called resources
-					// images also mustn't provide and suffix like .png, .jpg, ...
+					// images also mustn't provide a suffix like .png, .jpg, ...
 					var sprite  = enemy.getComponent(cc.Sprite);//.spriteFrame = new cc.SpriteFrame(texture); 
 					cc.loader.loadRes("circle", function(err, data) {
 						this.spriteFrame = new cc.SpriteFrame(data);
 					}.bind(sprite));
+					enemy.getComponent('Enemy').animate(enemy.getComponent(cc.Animation),"circle_plist",3);
 					break;
 				case 1: 
 					var sprite = enemy.getComponent(cc.Sprite);
 					cc.loader.loadRes("triangle", function(err, data) {
+						this.spriteFrame = new cc.SpriteFrame(data);
+					}.bind(sprite));
+					enemy.getComponent('Enemy').animate(enemy.getComponent(cc.Animation),"triangle_plist",12);
+					break;
+				case 2:
+					var sprite = enemy.getComponent(cc.Sprite);
+					cc.loader.loadRes("plane", function(err, data) {
 						this.spriteFrame = new cc.SpriteFrame(data);
 					}.bind(sprite));
 					break;
@@ -63,6 +80,7 @@ cc.Class({
 			// first it delays the action with the starting time of the wave
 			// then it runs the movement of the enemy			
 			enemy.runAction(cc.sequence(new cc.DelayTime(this.startingTimeInSeconds),enemy.getComponent('Enemy').move()));
+	
 			}
 		}	
 	},
