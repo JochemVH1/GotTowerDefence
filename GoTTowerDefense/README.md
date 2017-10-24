@@ -1,2 +1,1 @@
-# hello-world
-Hello world new project template.
+# A tower defense made with Cocos2d
